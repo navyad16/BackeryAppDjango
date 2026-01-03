@@ -1,0 +1,95 @@
+/* GLOBAL */
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #fffaf0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* PAGE LAYOUT (Sticky Footer) */
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* CARDS */
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+}
+
+/* ORDER TIMELINE */
+.order-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    position: relative;
+}
+
+.order-timeline::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #dee2e6;
+    z-index: 0;
+}
+
+.timeline-step {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+    width: 100%;
+}
+
+.timeline-step .circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #dee2e6;
+    margin: 0 auto;
+    line-height: 35px;
+    color: white;
+    font-weight: bold;
+}
+
+.timeline-step.active .circle {
+    background: #198754;
+    /* green */
+}
+
+.timeline-step.cancelled .circle {
+    background: #dc3545;
+    /* red */
+}
+
+.timeline-step span {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+}

@@ -1,0 +1,120 @@
+{% extends 'store/base.html' %}
+{% block content %}
+
+<h2 class="mb-4">My Orders 📦</h2>
+
+{% if orders %}
+
+    {% for order in orders %}
+    <div class="card mb-4">
+
+        <!-- Order header -->
+        <div class="card-header d-flex justify-content-between bg-light">
+            <strong>Order #{{ order.id }}</strong>
+            <span>{{ order.created_at|date:"d M Y, h:i A" }}</span>
+        </div>
+
+        <!-- Order body -->
+        <div class="card-body">
+
+            <!-- ORDER STATUS -->
+            <p>
+                <strong>Status:</strong>
+                {% if order.status == 'Processing' %}
+                    <span class="badge bg-warning text-dark">⏳ Processing</span>
+                {% elif order.status == 'Delivered' %}
+                    <span class="badge bg-success">✅ Delivered</span>
+                {% else %}
+                    <span class="badge bg-danger">❌ Cancelled</span>
+                {% endif %}
+            </p>
+            <!-- PAYMENT STATUS ✅ ADD HERE -->
+            <div class="mb-2">
+                <strong>Payment:</strong>
+                {% if order.paid %}
+                    <span class="badge bg-success">💳 Paid</span>
+                {% else %}
+                    <span class="badge bg-danger">❌ Unpaid</span>
+                {% endif %}
+            </div>
+
+            <!-- ESTIMATED DELIVERY DATE -->
+            <div class="mb-2">
+                <strong>Estimated Delivery:</strong>
+                <span class="badge bg-info text-dark">
+                    📅 {{ order.delivery_date|date:"d M Y" }}
+                </span>
+            </div>
+
+
+            <!-- ORDER STATUS TIMELINE -->
+            <div class="order-timeline">
+
+                <!-- PLACED -->
+                <div class="timeline-step active">
+                    <div class="circle">1</div>
+                    <span>Placed</span>
+                </div>
+
+                <!-- PROCESSING -->
+                <div class="timeline-step {% if order.status != 'Cancelled' %}active{% endif %}">
+                    <div class="circle">2</div>
+                    <span>Processing</span>
+                </div>
+
+                <!-- DELIVERED -->
+                <div class="timeline-step
+                    {% if order.status == 'Delivered' %}
+                        active
+                    {% elif order.status == 'Cancelled' %}
+                        cancelled
+                    {% endif %}
+                ">
+                    <div class="circle">3</div>
+                    <span>
+                        {% if order.status == 'Cancelled' %}
+                            Cancelled
+                        {% else %}
+                            Delivered
+                        {% endif %}
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- ORDER ITEMS -->
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderitem_set.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- CANCEL BUTTON (ONLY FOR PROCESSING ORDERS) -->
+            {% if order.status == 'Processing' %}
+                <a href="{% url 'cancel_order' order.id %}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to cancel this order?')">
+                    Cancel Order
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endfor %}
+
+{% else %}
+    <p>You have not placed any orders yet 🍰</p>
+{% endif %}
+
+{% endblock %}
