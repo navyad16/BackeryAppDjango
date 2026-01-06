@@ -5,8 +5,9 @@
 
 <form method="post" class="w-50 mx-auto mt-4">
     {% csrf_token %}
-    <input type="text" name="username" class="form-control mb-3" placeholder="Username">
-    <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+    <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
+    <input type="email"name="email"class="form-control mb-3"placeholder="Email address" required>
+    <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
     <button class="btn btn-warning w-100">Create Account</button>
 </form>
 

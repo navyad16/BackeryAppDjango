@@ -17,6 +17,25 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/">🍰 Bakery</a>
+            <form method="GET"
+                action="{% url 'products' %}"
+                class="d-flex align-items-center me-3" id="searchForm">
+                
+
+                <!-- SEARCH -->
+                <input id="searchInput"class="form-control me-2"
+                    type="text"
+                    name="q"
+                    placeholder="Search bakery items..."
+                    value="{{ query }}"
+                    class="form-control me-2"
+                    >
+
+                
+                <button class="btn btn-outline-warning" type="submit">
+                    🔍
+                </button>
+            </form>
 
             <div>
                 {% if user.is_authenticated %}
@@ -26,6 +45,10 @@
                     </a>
                     <a href="{% url 'cart' %}" class="btn btn-outline-warning">
                         Cart ({{ request.session.cart|length|default:0 }})
+                    </a>
+                    <!-- LOGOUT -->
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                        Logout
                     </a>
                 {% else %}
                     <a href="/login/" class="btn btn-outline-secondary me-2">Login</a>
@@ -46,6 +69,53 @@
     </footer>
 
 </div>
+
+<!-- ✅ GLOBAL JAVASCRIPT -->
+<script>
+/* ✅ For Add-to-Cart quantity buttons (home / product pages) */
+function changeQty(productId, change) {
+    let qtyInput = document.getElementById('qty-' + productId);
+    let minusBtn = document.getElementById('minus-' + productId);
+
+    let qty = parseInt(qtyInput.value);
+    qty += change;
+
+    if (qty < 1) qty = 1;
+
+    qtyInput.value = qty;
+
+    // ✅ Disable minus button only when qty = 1
+    minusBtn.disabled = (qty === 1);
+}
+
+/* ✅ For AJAX cart page quantity update */
+function updateQuantity(productId, action) {
+    fetch("{% url 'update_cart_quantity' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `product_id=${productId}&action=${action}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`qty-${productId}`).innerText = data.quantity;
+        document.getElementById(`item-total-${productId}`).innerText = data.item_total;
+        document.getElementById("grand-total").innerText = data.grand_total;
+    });
+}
+
+const input = document.getElementById("searchInput");
+const form = document.getElementById("searchForm");
+
+input.addEventListener("input", function () {
+    // ✅ If input cleared → reload once to show all products
+    if (this.value.trim() === "") {
+        window.location.href = form.action;
+    }
+});
+</script>
 
 </body>
 </html>

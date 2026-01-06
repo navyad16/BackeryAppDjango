@@ -1,21 +1,57 @@
 {% extends 'store/base.html' %}
 {% block content %}
 
-<h2 class="mb-4">Our Bakery Menu</h2>
-
 <div class="row">
     {% for product in products %}
-    <div class="col-md-3">
-        <div class="card mb-4">
+    <div class="col-md-3 mb-4">
+
+        <div class="card p-3">
             <img src="{{ product.image.url }}" class="card-img-top">
+
             <div class="card-body text-center">
-                <h6>{{ product.name }}</h6>
+                <h5>{{ product.name }}</h5>
                 <p>₹{{ product.price }}</p>
-                <a href="/product/{{ product.id }}/" class="btn btn-sm btn-warning">Details</a>
+
+                <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                onclick="changeQty('{{ product.id }}', -1)">−</button>
+
+                        <input type="text"
+                               id="qty-{{ product.id }}"
+                               name="quantity"
+                               value="1"
+                               class="form-control mx-2 text-center"
+                               style="width:60px;"
+                               readonly>
+
+                        <button type="button" class="btn btn-outline-success btn-sm"
+                                onclick="changeQty('{{ product.id }}', 1)">+</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100">
+                        Add to Cart 🛒
+                    </button>
+                </form>
             </div>
         </div>
+
     </div>
     {% endfor %}
 </div>
+<script>
+function changeQty(productId, change) {
+    let qtyInput = document.getElementById('qty-' + productId);
+    let currentQty = parseInt(qtyInput.value);
+
+    currentQty += change;
+
+    if (currentQty < 1) currentQty = 1;
+
+    qtyInput.value = currentQty;
+}
+</script>
 
 {% endblock %}

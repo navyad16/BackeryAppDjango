@@ -93,3 +93,36 @@ body {
     margin-top: 6px;
     font-size: 14px;
 }
+
+/* Completely disable hover & click styles for disabled buttons */
+button:disabled,
+button[disabled] {
+    pointer-events: none;
+    /* no hover, no click */
+    opacity: 0.5;
+    /* visual disabled look */
+    background-color: #f8d7da;
+    /* optional: light red */
+    border-color: #f5c2c7;
+    cursor: not-allowed;
+}
+
+/* Remove hover effect for quantity buttons */
+.qty-btn,
+.qty-btn:hover,
+.qty-btn:focus,
+.qty-btn:active {
+    background-color: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+
+.btn-outline-danger.qty-btn {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-success.qty-btn {
+    color: #198754;
+    border-color: #198754;
+}

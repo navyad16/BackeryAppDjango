@@ -4,27 +4,41 @@
 <h2>Your Cart 🛒</h2>
 
 {% if cart %}
-<table class="table mt-4">
+
+<table class="table align-middle mt-4">
     <thead>
         <tr>
             <th>Product</th>
-            <th>Image</th>
-            <th>Qty</th>
             <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
             <th></th>
         </tr>
     </thead>
+
     <tbody>
         {% for key, item in cart.items %}
         <tr>
-            <td>{{ item.name }}</td>
             <td>
-                <img src="{{ item.image }}" width="60">
+                <img src="{{ item.image }}" width="60" class="me-2">
+                {{ item.name }}
             </td>
-            <td>{{ item.quantity }}</td>
-            <td>₹{{ item.price|floatformat:2 }}</td>
+
+            <td>₹{{ item.price }}</td>
+
+            <!-- ✅ QUANTITY ONLY -->
             <td>
-                <a href="{% url 'remove_from_cart' key %}" class="btn btn-sm btn-danger">
+                <strong>{{ item.quantity }}</strong>
+            </td>
+
+            <!-- ✅ ITEM TOTAL -->
+            <td>
+                ₹{% widthratio item.price 1 item.quantity %}
+            </td>
+
+            <td>
+                <a href="{% url 'remove_from_cart' key %}"
+                   class="btn btn-sm btn-danger">
                     Remove
                 </a>
             </td>
@@ -33,6 +47,7 @@
     </tbody>
 </table>
 
+<!-- ✅ GRAND TOTAL -->
 <div class="text-end">
     <h4>Total: ₹{{ total }}</h4>
     <a href="{% url 'checkout' %}" class="btn btn-warning btn-lg">
